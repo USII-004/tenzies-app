@@ -84,11 +84,11 @@ function App() {
       <div>
         { dice.length > 0 
         ?
-        <main className="max-w-[350px] bg-[#0B2434] p-4 md:my-24">
+        <main className="md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]">
           {tenzies && <Confetti />}
           <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-around items-center flex-col px-10">
             <div className="flex flex-col items-center justify-center">
-              <h2 className="font-bold text-2xl my-4">Tenzies</h2>
+              <h2 className="my-4 text-2xl font-bold">Tenzies</h2>
               {!tenzies
               ? <p>Roll untill all dice are the same. Click each die to freeze it at its current value between rolls</p> 
               : <p>Hurray!! you won in {rolls} rolls, think you can do better?... Start a new game and try your luck again.</p>
@@ -98,7 +98,7 @@ function App() {
             <div className="grid grid-cols-5">
               {diceElement}
             </div>
-            <div className="flex justify-center items-center py-4">
+            <div className="flex items-center justify-center py-4">
               {!tenzies
                 ? <button
                     onClick={handleRoll} 
@@ -118,10 +118,10 @@ function App() {
           </div>
         </main>
         :
-        <div className='max-w-[350px] bg-[#0B2434] p-4 md:my-24'>
-          <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-around items-center flex-col px-10">
-            <h1 className="font-bold text-3xl">Tenzies</h1>
-            <h2 className="font-bold text-xl m-4">Want to test your luck?</h2>
+        <div className='md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]'>
+          <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-center items-center flex-col px-10">
+            <h1 className="text-3xl font-bold">Tenzies</h1>
+            <h2 className="m-4 text-xl font-bold">Want to test your luck?</h2>
             <p>Your goal is to get all the dice to hold the same number in the smallest possible rolls.</p>
             <p className="my-2">Click the button below to start the game and roll, Click each die to freeze it at its current value between rolls</p>
             <button 
