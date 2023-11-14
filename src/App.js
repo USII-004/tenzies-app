@@ -1,13 +1,16 @@
 import React from "react";
-import Dice from "./components/Dice";
 import { nanoid } from 'nanoid'
+import Classic from "./components/Classic";
+import Dice from "./components/Dice";
 import Confetti from 'react-confetti'
+import TimeAttack from "./components/TimeAttack";
 
 function App() {
 
   const [dice,setDice] = React.useState([])
   const [tenzies, setTenzies] = React.useState(false)
   const [rolls, setRolls] = React.useState(1)
+  const [gameMode, setGameMode] = React.useState('')
 
   React.useEffect( () => {
     if(dice.length > 0) {
@@ -21,6 +24,14 @@ function App() {
     }
   }, [dice] 
   )
+
+  function handleClassic() {
+    setGameMode('classic')
+  }
+
+  function handleTimeAttack() {
+    setGameMode('time attack')
+  }
   
   function allNewDice() {
     const newDice = []
@@ -44,12 +55,6 @@ function App() {
     }
   }
 
-  function toggleHold(id) {
-    setDice(prevDice => prevDice.map(item => {
-      return item.id === id ? {...item, isHeld: !item.isHeld} : item
-    }))
-  }
-
   const diceElement = dice.map(item => {
     return <Dice
       key={item.id} 
@@ -59,6 +64,13 @@ function App() {
       />
   }
   )
+
+  function toggleHold(id) {
+    setDice(prevDice => prevDice.map(item => {
+      return item.id === id ? {...item, isHeld: !item.isHeld} : item
+    }))
+  }
+
 
   function handleRoll() {
     setDice(prevDice => prevDice.map(item => {
@@ -79,44 +91,43 @@ function App() {
   }
 
 
-
-  return (
+  if (gameMode === '') {
+    return (
+      <div className='md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]'>
+        <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-center items-center flex-col px-10">
+          <h2 className="my-2 text-2xl font-bold">Welcome to Tenzies</h2>
+          <p className="font-bold">Do pick your game mode</p>
+          <p className="my-2">Select classic mode to learn about the game and play with no rules.</p>
+          <p>Select time attack mode if you are ready for some real challenge to race against time.</p>
+          <button 
+                className='bg-[#5035FF] px-10 py-2 rounded-md font-bold text-white my-2' 
+                onClick={handleClassic}
+            >
+                Classic Mode
+            </button>
+            <button 
+                className='bg-[#5035FF] px-10 py-2 rounded-md font-bold text-white my-2' 
+                onClick={handleTimeAttack}
+            >
+                Time Attack
+            </button>
+        </div>
+      </div>
+    )
+  } else if (gameMode === 'classic') {
+    return (
       <div>
         { dice.length > 0 
         ?
-        <main className="md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]">
-          {tenzies && <Confetti />}
-          <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-around items-center flex-col px-10">
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="my-4 text-2xl font-bold">Tenzies</h2>
-              {!tenzies
-              ? <p>Roll untill all dice are the same. Click each die to freeze it at its current value between rolls</p> 
-              : <p>Hurray!! you won in {rolls} rolls, think you can do better?... Start a new game and try your luck again.</p>
-              }
-              
-            </div>
-            <div className="grid grid-cols-5">
-              {diceElement}
-            </div>
-            <div className="flex items-center justify-center py-4">
-              {!tenzies
-                ? <button
-                    onClick={handleRoll} 
-                    className="bg-[#5035FF] px-10 py-2 rounded-md font-bold text-white"
-                  >
-                    Roll
-                  </button>
-                : <button
-                    onClick={handleReset} 
-                    className="bg-[#5035FF] px-10 py-2 rounded-md font-bold text-white"
-                  >
-                    New Game
-                  </button>
-              }
-            </div>
-            <p className="font-bold">Rolls: {rolls}</p>
-          </div>
-        </main>
+        <Classic
+          tenzies={tenzies}
+          handleRoll={handleRoll}
+          handleReset={handleReset}
+          rolls={rolls}
+          diceElement={diceElement}
+          Confetti={Confetti}
+          
+        />
         :
         <div className='md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]'>
           <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-center items-center flex-col px-10">
@@ -134,8 +145,21 @@ function App() {
         </div>
       
       }
-      </div>    
+      </div>
+            
   );
+  } else {
+    return (
+      <TimeAttack 
+        tenzies={tenzies}
+        handleRoll={handleRoll}
+        handleReset={handleReset}
+        rolls={rolls}
+        diceElement={diceElement}
+        Confetti={Confetti}
+      />
+    )
+  }
 }
 
 export default App;
