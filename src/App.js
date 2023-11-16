@@ -11,6 +11,8 @@ function App() {
   const [tenzies, setTenzies] = React.useState(false)
   const [rolls, setRolls] = React.useState(1)
   const [gameMode, setGameMode] = React.useState('')
+  const [seconds, setSeconds] = React.useState(30)
+  
 
   React.useEffect( () => {
     if(dice.length > 0) {
@@ -19,11 +21,21 @@ function App() {
       const sameDice = dice.every(item => item.value === firstValue)
 
       if(allHeld && sameDice) {
-        setTenzies(true)
+        setTenzies(true)  
       }
+
     }
   }, [dice] 
   )
+
+  // React.useEffect(() => {
+  //   console.log(timer)
+  //   console.log(tenzies)
+  //   if(tenzies) {
+  //     clearTimer()
+  //   }
+  // }, [tenzies])
+
 
   function handleClassic() {
     setGameMode('classic')
@@ -80,17 +92,69 @@ function App() {
   }
 
   function handleReset() {
-    setTenzies(prevState => !prevState)
+    setTenzies(false)
     setDice(allNewDice())
     setRolls(1)
+    handleTimer()
+    setSeconds(30)
   }
 
   function startGame() {
     setDice(allNewDice())
     setRolls(1)
+    handleTimer()
   }
 
+  
+  let timer;
 
+  function handleTimer() {
+    // check if an interval has already been set up
+    console.log(timer)
+    if (!timer) {
+      timer = setInterval(handleCountdown, 1000);
+    }else{ 
+      timer = null
+    }
+  }
+
+  function handleCountdown() {
+    console.log('interval called')
+    console.log(timer)
+    
+    if (tenzies) {
+      clearInterval(timer)
+      console.log('interval cleared')
+      console.log(timer)
+    }else {
+      setSeconds(prevTime => {
+        if(prevTime > 0) {
+          return prevTime - 1
+        }else {
+          return prevTime
+        }
+      })
+    }
+  }
+
+  // function startCountdown(seconds) {
+  //   setSeconds(prevTime =>  {
+  //     if (prevTime > 0) {
+  //       setTimeout(() => {
+  //         startCountdown(seconds - 1)
+  //         return seconds
+  //       }, 1000)
+  //     }
+  //   })
+  // }
+
+  function clearTimer() {
+    clearInterval(timer)
+    timer = null;
+  } 
+
+
+  
   if (gameMode === '') {
     return (
       <div className='md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]'>
@@ -150,14 +214,35 @@ function App() {
   );
   } else {
     return (
-      <TimeAttack 
-        tenzies={tenzies}
-        handleRoll={handleRoll}
-        handleReset={handleReset}
-        rolls={rolls}
-        diceElement={diceElement}
-        Confetti={Confetti}
-      />
+      <div>
+        {dice.length > 0
+        ? 
+        <TimeAttack 
+          tenzies={tenzies}
+          handleRoll={handleRoll}
+          handleReset={handleReset}
+          rolls={rolls}
+          seconds={seconds}
+          diceElement={diceElement}
+          Confetti={Confetti}
+        />
+        :
+        <div className='md:w-[450px] w-full bg-[#0B2434] p-4 md:my-24 h-screen md:h-[450px]'>
+          <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-center items-center flex-col px-10">
+            <h1 className="text-3xl font-bold">Tenzies</h1>
+            <h2 className="m-4 text-xl font-bold">Want to test your luck?</h2>
+            <p>Your goal is to get all the dice to hold the same number in the smallest possible rolls.</p>
+            <p className="my-2">Click the button below to start the game and roll, Click each die to freeze it at its current value between rolls</p>
+            <button 
+                className='bg-[#5035FF] px-10 py-2 rounded-md font-bold text-white my-2' 
+                onClick={startGame}
+            >
+                Start Game
+            </button>
+          </div>
+        </div> 
+        }
+      </div>
     )
   }
 }

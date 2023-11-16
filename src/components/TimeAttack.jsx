@@ -1,22 +1,6 @@
 import React from 'react'
 
 const TimeAttack = (props) => {
-  const [time, setTime] = React.useState(10)
-  
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setTime((prevTime) => prevTime - 1)
-    }, 1000)
-
-    if(time === 0) {
-      setTime(0)
-      return (() => clearInterval(timer))
-    }
-  }, [])
-
-  const seconds = time
-  const milliSeconds = time % 100
-
   
   return (
     <div>
@@ -32,9 +16,7 @@ const TimeAttack = (props) => {
             
           </div>
           <div className='flex items-center justify-center text-6xl'>
-            <h2>{seconds}</h2>
-            {/* <p>.</p>
-            <h2>{milliSeconds}</h2> */}
+            <h2>{props.seconds}</h2>
           </div>
           <div className="grid grid-cols-5">
             {props.diceElement}
