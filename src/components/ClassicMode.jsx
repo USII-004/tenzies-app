@@ -1,15 +1,16 @@
 import React from 'react'
 import Classic from './Classic'
 import Dice from "./Dice";
-import Confetti from 'react-confetti'
 import { nanoid } from 'nanoid'
 import Start from "./Start";
+import FinishClassic from './FinishClassic';
 
 
 const ClassicMode = () => {
   const [dice,setDice] = React.useState([])
   const [tenzies, setTenzies] = React.useState(false)
   const [rolls, setRolls] = React.useState(1)
+  const [start, setStart] = React.useState(false)
 
   React.useEffect( () => {
     if(dice.length > 0) {
@@ -18,7 +19,8 @@ const ClassicMode = () => {
       const sameDice = dice.every(item => item.value === firstValue)
 
       if(allHeld && sameDice) {
-        setTenzies(true)  
+        setTenzies(true)
+        setStart(prevState => !prevState)  
       }
 
     }
@@ -76,6 +78,7 @@ const ClassicMode = () => {
     setTenzies(false)
     setDice(allNewDice())
     setRolls(1)
+    setStart(prevState => !prevState)
     // setStart(true)
     // setSeconds(30)
   }
@@ -83,30 +86,38 @@ const ClassicMode = () => {
   function startGame() {
     setDice(allNewDice())
     setRolls(1)
+    setStart(prevState => !prevState)
     // setStart(true)
 
   }
 
-  return (
-    <div>
-        { dice.length > 0 
-        ?
-        <Classic
-          tenzies={tenzies}
-          handleRoll={handleRoll}
-          handleReset={handleReset}
-          rolls={rolls}
-          diceElement={diceElement}
-          Confetti={Confetti}
-          
+  if (start) {
+    return (
+      <Classic
+      handleRoll={handleRoll}
+      rolls={rolls}
+      diceElement={diceElement}
+      
+    />
+    )
+  }else {
+    if(tenzies) {
+      return (
+        <FinishClassic 
+          handleReset = {handleReset}
+          rolls = {rolls}
+          tenzies = {tenzies}
         />
-        :
+      )
+    }else {
+      return (
         <Start 
-          startGame = {startGame}
-        />
-      }
-      </div>
-  )
+        startGame = {startGame}
+      />
+      )
+    }
+  }
+
 }
 
 export default ClassicMode
