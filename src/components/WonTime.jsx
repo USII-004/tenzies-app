@@ -13,7 +13,7 @@ const WonTime = (props) => {
         </div>
         <div className="flex flex-col items-center justify-center py-4">
           <p className='text-xl font-bold'>Number of Rolls: {props.rolls}</p>
-          <p className='my-4 text-xl font-bold'>Seconds: {30 - props.seconds}</p>
+          <p className='my-4 text-xl font-bold'>Time: {30 - props.seconds} seconds</p>
         </div> 
         <div>
           <button
