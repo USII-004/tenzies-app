@@ -1,9 +1,10 @@
 import React from 'react'
 import TimeAttack from './TimeAttack';
 import Dice from "./Dice";
-import Confetti from 'react-confetti'
 import { nanoid } from 'nanoid'
 import Start from "./Start";
+import WonTime from './WonTime';
+import FailedTime from './FailedTime';
 
 const TimeMode = () => {
   const [dice,setDice] = React.useState([])
@@ -19,7 +20,8 @@ const TimeMode = () => {
       const sameDice = dice.every(item => item.value === firstValue)
 
       if(allHeld && sameDice) {
-        setTenzies(true)  
+        setTenzies(true)
+        setStart(prevState => !prevState)  
       }
 
     }
@@ -77,95 +79,117 @@ const TimeMode = () => {
     setTenzies(false)
     setDice(allNewDice())
     setRolls(1)
-    // setStart(true)
-    // setSeconds(30)
+    setStart(true)  
+    setSeconds(30)
   }
 
   function startGame() {
     setDice(allNewDice())
     setRolls(1)
-    // setStart(true)
-
+    setStart(true)  
+    // setSeconds(30)
   }
 
   let timer;
 
-  /* after timer was assigned for the countdown, it never defaults to null*/ 
 
-  // function handleTimer() {
-  //   console.log(timer)
-  //   // check if an interval has already been set up
-  //   if (!timer) {
-  //     timer = setInterval(handleCountdown, 1000);
-  //   }
-  // }
+  function handleTimer() {
+    console.log(timer)
+    // check if an interval has already been set up
+    if (!timer) {
+      timer = setInterval(handleCountdown, 1000);
+    }
+  }
 
-  // function handleCountdown() {
-  //   setSeconds(prevTime => {
-  //     if(prevTime > 0 && !tenzies) {
-  //       console.log('interval called')
-  //       prevTime--
-  //     }else {
-  //       /*console shows that this else statement was ran twice*/ 
-  //       clearInterval(timer)
-  //       timer = null /*reset timer to null, on count hitting zero*/
-  //       console.log('interval cleared')
-  //     }
+  function handleCountdown() {
+    setSeconds(prevTime => {
+      if(prevTime > 0) {
+        console.log('interval called')
+        console.log(timer)
+        prevTime--
+      }else {
+        /*console shows that this else statement was ran twice*/ 
+        clearInterval(timer)
+        timer = null /*reset timer to null, on count hitting zero*/
+        console.log('interval cleared')
+        console.log(timer)
+      }
 
-  //     return prevTime
-  //   })
-  // }
-
-  /*the issue with the handle timer function is that as at the
-  time it was called, tenzies was false, it assumes this as the
-  case until the interval finishes it's count. so even when tenzies
-  becomes true mid game, the countdown is cleared, but it is called
-  again and the count continues */ 
-
-
+      return prevTime
+    })
+  } 
   
 
-  // function clearTimer() {
-  //   clearInterval(timer)
-  //   timer = null;
-  // }
+  function clearTimer() {
+    clearInterval(timer)
+    timer = null;
+  }
   
-  // React.useEffect(() => {
-  //   if(start && !tenzies) {
-  //     handleTimer()
-  //   }else {
-  //     clearTimer()
-  //     setStart(false)
-  //     console.log('timer cleared on tenzies')
-  //   }
-  // }, [start, tenzies])
+  React.useEffect(() => {
+    // Initialize the timer only if the game has started
+    if (start) {
+      handleTimer();
+  
+      // Cleanup function to clear the interval when the component is unmounted or when 'start' changes
+      return () => {
+        clearTimer();
+        console.log('timer cleared on unmount or start change');
+        console.log(timer);
+      };
+    } else {
+      // If 'start' is false, clear the timer
+      clearTimer();
+      console.log('timer cleared on tenzies or start is false');
+      console.log(timer);
+    }
+  }, [start]);
+  
 
-  /*even with the useEffect above which actively keeps 
-  track of the start and tenzies state b4 calling the 
-  handletimer function, the countdown still counts untill
-   zero even when tenzies is true*/ 
 
 
-  return (
-    <div>
-        {dice.length > 0
-        ? 
+  /*As of now, if the countdown timer counts to zero, the timer
+  fails to countdown on subsequest reset*/
+  
+   
+
+
+   if(start) {
+    if (seconds > 0) {
+      return (
         <TimeAttack 
-          tenzies={tenzies}
           handleRoll={handleRoll}
-          handleReset={handleReset}
           rolls={rolls}
           seconds={seconds}
           diceElement={diceElement}
-          Confetti={Confetti}
         />
-        :
-        <Start 
-          startGame = {startGame}
+      )
+    }else {
+      return (
+        <FailedTime 
+          handleReset = {handleReset}
         />
-        }
-      </div>
-  )
+      )
+    }
+   }else {
+    if(tenzies) {
+      return (
+        <WonTime 
+          seconds = {seconds}
+          tenzies = {tenzies}
+          rolls = {rolls}
+          handleReset = {handleReset}
+        />
+      )
+    }else {
+      if(seconds > 0) {
+        return (
+          <Start 
+            startGame = {startGame}
+          />
+        )
+      }
+    }
+   }
 }
 
 export default TimeMode

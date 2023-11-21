@@ -112,8 +112,8 @@ const ClassicMode = () => {
     }else {
       return (
         <Start 
-        startGame = {startGame}
-      />
+          startGame = {startGame}
+        />
       )
     }
   }
