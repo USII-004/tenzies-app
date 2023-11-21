@@ -76,12 +76,16 @@ const TimeMode = () => {
 
 
   function handleReset() {
-    setTenzies(false)
-    setDice(allNewDice())
-    setRolls(1)
-    setStart(true)  
-    setSeconds(30)
+    setTenzies(false);
+    setDice(allNewDice());
+    setRolls(1);
+    setStart(false); // Set start to false first
+    setTimeout(() => {
+      setStart(true); // Set start to true after a short delay
+      setSeconds(30);
+    }, 100);
   }
+  
 
   function startGame() {
     setDice(allNewDice())
@@ -145,11 +149,6 @@ const TimeMode = () => {
   }, [start]);
   
 
-
-
-  /*As of now, if the countdown timer counts to zero, the timer
-  fails to countdown on subsequest reset*/
-  
    
 
 
