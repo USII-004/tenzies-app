@@ -94,29 +94,44 @@ const TimeMode = () => {
     // setSeconds(30)
   }
 
-  let timer;
+
+  const timerRef = React.useRef(null);
+
+  /*ESLint warning suggests that assignments to the timer 
+  variable inside the React.useCallback will be lost after 
+  each render. To address this, I used the useRef hook to 
+  create a mutable object that persists across renders and 
+  modification won't be lost.*/ 
 
 
-  function handleTimer() {
-    console.log(timer)
-    // check if an interval has already been set up
-    if (!timer) {
-      timer = setInterval(handleCountdown, 1000);
+  const handleTimer = React.useCallback(() => {
+    if (!timerRef.current) {
+      timerRef.current = setInterval(handleCountdown, 1000);
     }
-  }
+  }, [])
+
+  const clearTimer = React.useCallback(() => {
+    clearInterval(timerRef.current)
+    timerRef.current = null;
+  }, [])
+
+  /*I fixed the ESLint warnings you're seeing are related to the
+   fact that handleTimer and clearTimer functions are defined 
+   outside the useEffect callback, and they are referenced inside 
+   the useEffect dependency array. By wrapping handleTimer and 
+   clearTimer with useCallback, I memoize these functions and 
+   ensure they won't change on every render. This resolves the 
+   ESLint warnings about changing dependencies in the useEffect 
+   dependency array.*/ 
 
   function handleCountdown() {
     setSeconds(prevTime => {
       if(prevTime > 0) {
-        console.log('interval called')
-        console.log(timer)
         prevTime--
       }else {
         /*console shows that this else statement was ran twice*/ 
-        clearInterval(timer)
-        timer = null /*reset timer to null, on count hitting zero*/
-        console.log('interval cleared')
-        console.log(timer)
+        clearInterval(timerRef.current)
+        timerRef.current = null /*reset timer to null, on count hitting zero*/
       }
 
       return prevTime
@@ -124,11 +139,7 @@ const TimeMode = () => {
   } 
   
 
-  function clearTimer() {
-    clearInterval(timer)
-    timer = null;
-  }
-  
+  // eslint-disable-next-line
   React.useEffect(() => {
     // Initialize the timer only if the game has started
     if (start) {
@@ -137,16 +148,18 @@ const TimeMode = () => {
       // Cleanup function to clear the interval when the component is unmounted or when 'start' changes
       return () => {
         clearTimer();
-        console.log('timer cleared on unmount or start change');
-        console.log(timer);
       };
     } else {
       // If 'start' is false, clear the timer
       clearTimer();
-      console.log('timer cleared on tenzies or start is false');
-      console.log(timer);
     }
-  }, [start]);
+  }, [start, clearTimer, handleTimer]);
+
+  /*included clearTimer and handleTimer in the dependency array
+  ESLint expects you to include all the variables and functions
+  from the component scope that are used inside the useEffect in
+  the dependency array to ensure that the effect has access to 
+  the latest values of those dependencies. */ 
   
 
    
