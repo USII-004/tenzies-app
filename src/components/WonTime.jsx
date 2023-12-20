@@ -9,16 +9,17 @@ const WonTime = (props) => {
       <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-center items-center flex-col px-10">
         <div className="flex flex-col items-center justify-center">
           <h2 className="my-4 text-2xl font-bold">HURRAY!!</h2>
-          <p>Congratulations, on completing the game and beating the time</p>
+          <p>Congratulations, on completing the game</p>
+          <p>Game results:-</p>
         </div>
         <div className="flex flex-col items-center justify-center py-4">
           <p className='text-xl font-bold'>Number of Rolls: {props.rolls}</p>
           <p className='my-4 text-xl font-bold'>Time: {30 - props.seconds} seconds</p>
         </div>
-        <div className="flex flex-col items-center justify-center py-4">
-          <p className='my-4 text-2xl font-bold'>HIGH SCORE DETAILS</p>
-          <p className='text-xl font-bold'>Best Roll: {props.bestRoll}</p>
-          <p className='my-4 text-xl font-bold'>Fastest Time: {30 - props.fastestTime} seconds</p>
+        <div className="flex flex-col items-center justify-center py-2">
+          <p className='my-4 text-2xl font-bold'>BEST RESULTS</p>
+          <p className='text-xl font-bold'>Rolls: {props.bestRoll}</p>
+          <p className='my-4 text-xl font-bold'>Time: {30 - props.fastestTime} seconds</p>
         </div> 
         <div>
           <button
