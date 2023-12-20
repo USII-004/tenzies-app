@@ -10,9 +10,9 @@ const WonTime = (props) => {
         <div className="flex flex-col items-center justify-center">
           <h2 className="my-4 text-2xl font-bold">HURRAY!!</h2>
           <p>Congratulations, on completing the game</p>
-          <p>Game results:-</p>
         </div>
         <div className="flex flex-col items-center justify-center py-4">
+          <p className='my-4 text-xl font-bold'>GAME RESULTS</p>
           <p className='text-xl font-bold'>Number of Rolls: {props.rolls}</p>
           <p className='my-4 text-xl font-bold'>Time: {30 - props.seconds} seconds</p>
         </div>
