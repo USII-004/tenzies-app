@@ -12,6 +12,8 @@ const TimeMode = () => {
   const [rolls, setRolls] = React.useState(1)
   const [seconds, setSeconds] = React.useState(30)
   const [start, setStart] = React.useState(false)
+  const [storedHighestSeconds, setStoredHighestSeconds] = React.useState(null)
+  const [storedBestRoll, setStoredBestRoll] = React.useState(null)
 
   React.useEffect( () => {
     if(dice.length > 0) {
@@ -28,6 +30,40 @@ const TimeMode = () => {
   }, [dice] 
   )
 
+  // get soconds and rolls  from local storage
+
+  React.useEffect(() => {
+    const storedSeconds = localStorage.getItem('highestSeconds')
+    const storedRoll = localStorage.getItem('bestRoll')
+
+    if(storedSeconds !== null) {
+      setStoredHighestSeconds(parseInt(storedSeconds, 10));
+    }
+
+    if(storedRoll !== null) {
+      setStoredBestRoll(parseInt(storedRoll, 10));
+    }
+  }, []);
+
+  // save seconds and rolls to local storage when the game is completed
+
+  React.useEffect(() => {
+    if(tenzies) {
+      const storedHighestSeconds = localStorage.getItem('highestSeconds')
+      const storedBestRoll = localStorage.getItem('bestRoll')
+
+      if ((!storedHighestSeconds || seconds >= parseInt(storedHighestSeconds, 10)) && (!storedBestRoll || rolls <= parseInt(storedBestRoll, 10))) {
+        localStorage.setItem('highestSeconds', seconds);
+        setStoredHighestSeconds(seconds)
+
+        localStorage.setItem('bestRoll', rolls);
+        setStoredBestRoll(rolls)
+      }
+    }
+  }, [tenzies, seconds, rolls])
+
+
+
   function allNewDice() {
     const newDice = []
     for(let i = 0; i < 10; i++) {
@@ -41,12 +77,7 @@ const TimeMode = () => {
     return {
       value: Math.ceil(Math.random() * 6),
       isHeld: false,
-      id: nanoid()
-      // Math.floor(Math.random() * (6)) + 1
-      /*
-        Math.floor creates a random number from 0 to the specified number 
-        Math.ceil creates a random number from 1 to the specified number
-      */ 
+      id: nanoid() 
     }
   }
 
@@ -190,6 +221,8 @@ const TimeMode = () => {
           tenzies = {tenzies}
           rolls = {rolls}
           handleReset = {handleReset}
+          fastestTime = {storedHighestSeconds}
+          bestRoll = {storedBestRoll}
         />
       )
     }else {

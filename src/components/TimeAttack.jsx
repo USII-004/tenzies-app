@@ -8,7 +8,10 @@ const TimeAttack = (props) => {
         <div className="w-full bg-[#f5f5f5] h-[100%] rounded-md flex justify-around items-center flex-col px-10">
           <div className="flex flex-col items-center justify-center">
             <h2 className="my-4 text-2xl font-bold">Tenzies</h2>
-            <p>Roll untill all dice are the same. Click each die to freeze it at its current value between rolls</p> 
+            <p>Roll untill all dice are the same. 
+              Click each die to freeze it at its current value between rolls.
+              Your goal is to complete all die before the timer runs out.
+            </p> 
           </div>
           <div className='flex items-center justify-center text-6xl'>
             <h2>{props.seconds}</h2>
