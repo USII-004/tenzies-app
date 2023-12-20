@@ -10,7 +10,7 @@ const TimeMode = () => {
   const [dice,setDice] = React.useState([])
   const [tenzies, setTenzies] = React.useState(false)
   const [rolls, setRolls] = React.useState(1)
-  const [seconds, setSeconds] = React.useState(30)
+  const [seconds, setSeconds] = React.useState(15)
   const [start, setStart] = React.useState(false)
   const [storedHighestSeconds, setStoredHighestSeconds] = React.useState(null)
   const [storedBestRoll, setStoredBestRoll] = React.useState(null)
@@ -113,7 +113,7 @@ const TimeMode = () => {
     setStart(false); // Set start to false first
     setTimeout(() => {
       setStart(true); // Set start to true after a short delay
-      setSeconds(30);
+      setSeconds(15);
     }, 100);
   }
   
@@ -122,7 +122,7 @@ const TimeMode = () => {
     setDice(allNewDice())
     setRolls(1)
     setStart(true)  
-    // setSeconds(30)
+    // setSeconds(15)
   }
 
 

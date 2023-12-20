@@ -14,12 +14,12 @@ const WonTime = (props) => {
         <div className="flex flex-col items-center justify-center py-4">
           <p className='my-4 text-xl font-bold'>GAME RESULTS</p>
           <p className='text-xl font-bold'>Number of Rolls: {props.rolls}</p>
-          <p className='my-4 text-xl font-bold'>Time: {30 - props.seconds} seconds</p>
+          <p className='my-4 text-xl font-bold'>Time: {15 - props.seconds} seconds</p>
         </div>
         <div className="flex flex-col items-center justify-center py-2">
           <p className='my-4 text-2xl font-bold'>BEST RESULTS</p>
           <p className='text-xl font-bold'>Rolls: {props.bestRoll}</p>
-          <p className='my-4 text-xl font-bold'>Time: {30 - props.fastestTime} seconds</p>
+          <p className='my-4 text-xl font-bold'>Time: {15 - props.fastestTime} seconds</p>
         </div> 
         <div>
           <button
